@@ -1,0 +1,42 @@
+<!-- flask_app/templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sequence Generator</title>
+</head>
+<body>
+    <h1>Sequence Generator</h1>
+    <form id="sequence-form" method="POST" action="/generate">
+        <label for="prompt">Enter a prompt:</label>
+        <input type="text" name="prompt" id="prompt" required>
+        <br>
+        <label for="no_words">Number of words to generate:</label>
+        <input type="number" name="no_words" id="no_words" required>
+        <br>
+        <input type="submit" value="Generate">
+    </form>
+    <h2>Generated Sequence:</h2>
+    <p id="generated-sequence"></p>
+</body>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('sequence-form');
+    const generatedSequence = document.getElementById('generated-sequence');
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        fetch('/generate', {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                generatedSequence.textContent = data.generated_sequence;
+                alert(`Generated ${data.no_words} words.`);
+            });
+    });
+});
+</script>
+</html>
